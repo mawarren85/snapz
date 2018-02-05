@@ -11,14 +11,17 @@ import SpriteKit
 
 class GameScene: SKScene {
     
-//    private var label : SKLabelNode?
-//    private var spinnyNode : SKShapeNode?
-    
+
     // declare variables
-   // class football : SKSpriteNode { }
     var football: SKSpriteNode?
     var touchPoint: CGPoint = CGPoint()
     var touching: Bool = false
+    
+    // scale controls rate object moves towards location of touch
+   // let scale: CGFloat = 2.0
+    
+    // damping slows sprite when touch ends
+    //let damping: CGFloat = 0.98
 
     
     
@@ -28,8 +31,9 @@ class GameScene: SKScene {
         self.football = self.childNode(withName: "//football") as? SKSpriteNode
         print(football!)
 
-        self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
+       // self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
         football!.physicsBody = SKPhysicsBody(rectangleOf: (football!.size))
+        //football!.physicsBody?.affectedByGravity = false
         
         }
     
@@ -50,18 +54,36 @@ class GameScene: SKScene {
         let touch = touches.first as UITouch!
         let location = touch!.location(in: self)
         touchPoint = location
+        
+        // scale football and fadeout
+        let scale = SKAction.scale(to: 0.1, duration: 0.7)
+        let fade = SKAction.fadeOut(withDuration: 0.7)
+        let sequence = SKAction.sequence([scale, fade])
+        football!.run(sequence)
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         touching = false
+        // touchpoint = nil?
     }
+    
+    
+//    func moveNodeToPoint(football: SKSpriteNode, touchPoint: CGPoint) {
+//
+//    }
+    
     
     override func update(_ currentTime: CFTimeInterval) {
         if touching {
-            let dt:CGFloat = 1.0/60.0
+            //let dt:CGFloat = 1.0/60.0
+            let dt: CGFloat = 1
+
+
             let distance = CGVector(dx: touchPoint.x-football!.position.x, dy: touchPoint.y-football!.position.y)
-            let velocity = CGVector(dx: distance.dx/dt, dy: distance.dy/dt)
+            let velocity = CGVector(dx: distance.dx/dt, dy: distance.dy)
             football!.physicsBody!.velocity=velocity
+            
+
         }
     }
         
