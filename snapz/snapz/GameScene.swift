@@ -12,8 +12,8 @@ import SpriteKit
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // declare collision mask categories
-    let footballCategory : UInt32 =  0x1 << 1
-    let goalCategory : UInt32 =  0x1 << 2
+    let footballCategory : UInt32 =  1 << 0
+    let goalCategory : UInt32 =  1 << 1
 
 
 
@@ -53,8 +53,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
        // self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
         football!.physicsBody = SKPhysicsBody(rectangleOf: (football!.size))
-        rightBar!.physicsBody = SKPhysicsBody(rectangleOf: (rightBar!.size))
-        leftBar!.physicsBody = SKPhysicsBody(rectangleOf: (leftBar!.size))
+//        rightBar!.physicsBody = SKPhysicsBody(rectangleOf: (rightBar!.size))
+//        leftBar!.physicsBody = SKPhysicsBody(rectangleOf: (leftBar!.size))
        
         
         // set physics world
@@ -75,12 +75,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         leftBar!.physicsBody?.contactTestBitMask = footballCategory
         leftBar!.physicsBody?.collisionBitMask = footballCategory
        
-        let borderBody = SKPhysicsBody(edgeLoopFrom: self.frame)
-        self.physicsBody = borderBody
-        self.physicsBody?.friction = 0
-        borderBody.contactTestBitMask = goalCategory | footballCategory
+//        let borderBody = SKPhysicsBody(edgeLoopFrom: self.frame)
+//        self.physicsBody = borderBody
+//        self.physicsBody?.friction = 0
+//        borderBody.contactTestBitMask = goalCategory | footballCategory
         //borderBody.categoryBitMask
-        borderBody.collisionBitMask = goalCategory | footballCategory
+    
+       // football!.physicsBody?.collisionBitMask = goalCategory
         
         football!.physicsBody?.usesPreciseCollisionDetection = true
         rightBar!.physicsBody?.usesPreciseCollisionDetection = true
@@ -161,7 +162,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func didBegin(_ contact: SKPhysicsContact) {
         print("BARRRRRRRRRR")
-        print(contact.bodyA.node!)
+       
         if contact.bodyA.categoryBitMask == goalCategory &&  contact.bodyB.categoryBitMask == footballCategory {
             //let contactPoint = contact.contactPoint
             print("BAR HIT BAR HIT BAR HIT BAR HIT")
