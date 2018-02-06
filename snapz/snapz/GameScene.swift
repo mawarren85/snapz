@@ -23,6 +23,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var leftBar: SKSpriteNode?
     var touchPoint: CGPoint = CGPoint()
     var touching: Bool = false
+    var count: Int = 5
+    var countdownLabel = SKLabelNode(fontNamed: "ArialMT")
+    var gameCountdownLabel =  SKLabelNode(fontNamed: "ArialMT")
+    var gameCount: Int = 15 {
+        didSet {
+            gameCountdownLabel.text = "\(gameCount)"
+        }
+    }
+    var scoreLabel = SKLabelNode(fontNamed: "ArialMT")
+    var score: Int = 0 {
+        didSet {
+            scoreLabel.text = "Score: \(score)"
+        }
+    }
+    
     
 
    // var football: SKSpriteNode!
@@ -37,7 +52,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     
     override func didMove(to view: SKView) {
+        
+        // define game score label properties
+        scoreLabel.fontColor = SKColor.white
+        scoreLabel.fontSize = 25
+        scoreLabel.position = CGPoint(x: -100, y: 245)
+        scoreLabel.text = "Score: \(score)"
+        addChild(scoreLabel)
     
+        
        // self.football = self.childNode(withName: "//football") as? SKSpriteNode
         //football.name = "football"
         //football.position = CGPoint(x: 0, y: -207)
@@ -63,17 +86,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // MAKE SHIT BOUNCE OFF WALLLLLS
  
-        football!.physicsBody?.categoryBitMask = footballCategory
-        football!.physicsBody?.contactTestBitMask = goalCategory
-        football!.physicsBody?.collisionBitMask = goalCategory
-        
-        rightBar!.physicsBody?.categoryBitMask = goalCategory
-        rightBar!.physicsBody?.contactTestBitMask = footballCategory
-        rightBar!.physicsBody?.collisionBitMask = footballCategory
-        
-        leftBar!.physicsBody?.categoryBitMask = goalCategory
-        leftBar!.physicsBody?.contactTestBitMask = footballCategory
-        leftBar!.physicsBody?.collisionBitMask = footballCategory
+//        football!.physicsBody?.categoryBitMask = footballCategory
+//        football!.physicsBody?.contactTestBitMask = goalCategory
+//        football!.physicsBody?.collisionBitMask = goalCategory
+//
+//        rightBar!.physicsBody?.categoryBitMask = goalCategory
+//        rightBar!.physicsBody?.contactTestBitMask = footballCategory
+//        rightBar!.physicsBody?.collisionBitMask = footballCategory
+//
+//        leftBar!.physicsBody?.categoryBitMask = goalCategory
+//        leftBar!.physicsBody?.contactTestBitMask = footballCategory
+//        leftBar!.physicsBody?.collisionBitMask = footballCategory
        
 //        let borderBody = SKPhysicsBody(edgeLoopFrom: self.frame)
 //        self.physicsBody = borderBody
@@ -87,7 +110,82 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         rightBar!.physicsBody?.usesPreciseCollisionDetection = true
         leftBar!.physicsBody?.usesPreciseCollisionDetection = true
         
+        
+        // before game start countdown
+        
+        func countdown(count: Int) {
+            print("in countdown....................")
+            countdownLabel.horizontalAlignmentMode = .center
+            countdownLabel.verticalAlignmentMode = .baseline
+            countdownLabel.position = CGPoint(x: 0, y: 0)
+            countdownLabel.fontColor = SKColor.white
+            countdownLabel.fontSize = 150
+            countdownLabel.zPosition = 100
+            countdownLabel.text = "\(count)"
+            
+            addChild(countdownLabel)
+            
+            let counterDecrement = SKAction.sequence([SKAction.wait(forDuration: 1.0), SKAction.run(countdownAction)])
+            run(SKAction.sequence([SKAction.repeat(counterDecrement, count: 5), SKAction.run(endCountdown)]))
+            
         }
+        
+        
+        func countdownAction () {
+            // fade numbers on count
+            let fadeoutNumber = SKAction.fadeOut(withDuration: 0.3)
+            let fadeinNumber = SKAction.fadeIn(withDuration: 0.3)
+            let sequence = SKAction.sequence([fadeoutNumber, fadeinNumber])
+            countdownLabel.run(sequence)
+            
+            count = count - 1
+            countdownLabel.text = "\(count)"
+        }
+        
+        
+        func endCountdown () {
+            countdownLabel.removeFromParent()
+            
+            // call game countdown function
+            gameCountdown(gameCount: 15)
+        }
+        
+        // call countdown function
+        countdown(count: 5)
+        
+        
+        // define game countdown label properties
+        gameCountdownLabel.fontColor = SKColor.white
+        gameCountdownLabel.fontSize = 50
+        gameCountdownLabel.position = CGPoint(x: 115, y: 225)
+        gameCountdownLabel.text = "\(gameCount)"
+        addChild(gameCountdownLabel)
+        
+        func gameCountdown(gameCount: Int) {
+            print("in game countdown....................")
+            
+            let gameCounterDecrement = SKAction.sequence([SKAction.wait(forDuration: 1.0), SKAction.run(gameCountdownAction)])
+            run(SKAction.sequence([SKAction.repeat(gameCounterDecrement, count: 15), SKAction.run(endGame)]))
+            
+        }
+        
+        
+        func gameCountdownAction () {
+            gameCount = gameCount - 1
+            gameCountdownLabel.text = "\(gameCount)"
+        }
+        
+        
+        func endGame () {
+            print("game over")
+        }
+        
+ 
+        
+        
+        
+        }
+    
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let touch = touches.first {
