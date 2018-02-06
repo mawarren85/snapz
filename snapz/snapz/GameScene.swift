@@ -14,15 +14,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // declare collision mask categories
     let footballCategory : UInt32 =  1 << 0
     let goalCategory : UInt32 =  1 << 1
-
+    let touchdownCategory : UInt32 =  1 << 2
 
 
     // declare variables
     var football: SKSpriteNode?
     var rightBar: SKSpriteNode?
     var leftBar: SKSpriteNode?
+    var touchdown: SKSpriteNode?
     var touchPoint: CGPoint = CGPoint()
     var touching: Bool = false
+    var contactCount : Int = 0
     var count: Int = 5
     var countdownLabel = SKLabelNode(fontNamed: "ArialMT")
     var gameCountdownLabel =  SKLabelNode(fontNamed: "ArialMT")
@@ -68,14 +70,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // get football node from scene and store it for use
         self.football = self.childNode(withName: "//football") as? SKSpriteNode
+        football?.setScale(0.50)
         print(football!)
         self.rightBar = self.childNode(withName: "//rightBar") as? SKSpriteNode
         print(rightBar!)
         self.leftBar = self.childNode(withName: "//leftBar") as?
             SKSpriteNode
+        self.touchdown = self.childNode(withName:"//touchdown") as? SKSpriteNode
+        print(touchdown!, separator: "", terminator: "TOUCHDOWN")
 
        // self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
         football!.physicsBody = SKPhysicsBody(rectangleOf: (football!.size))
+       // football!.physicsBody?.contactTestBitMask = touchdownCategory
+        //football!.physicsBody?.collisionBitMask = 0
+        touchdown!.physicsBody = SKPhysicsBody(rectangleOf: (touchdown!.size))
+       // touchdown!.physicsBody?.contactTestBitMask = footballCategory
+        touchdown!.physicsBody?.affectedByGravity = false
+      //  touchdown!.physicsBody?.collisionBitMask = 0
+        
 //        rightBar!.physicsBody = SKPhysicsBody(rectangleOf: (rightBar!.size))
 //        leftBar!.physicsBody = SKPhysicsBody(rectangleOf: (leftBar!.size))
        
@@ -86,17 +98,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // MAKE SHIT BOUNCE OFF WALLLLLS
  
-//        football!.physicsBody?.categoryBitMask = footballCategory
-//        football!.physicsBody?.contactTestBitMask = goalCategory
-//        football!.physicsBody?.collisionBitMask = goalCategory
-//
-//        rightBar!.physicsBody?.categoryBitMask = goalCategory
-//        rightBar!.physicsBody?.contactTestBitMask = footballCategory
-//        rightBar!.physicsBody?.collisionBitMask = footballCategory
-//
-//        leftBar!.physicsBody?.categoryBitMask = goalCategory
-//        leftBar!.physicsBody?.contactTestBitMask = footballCategory
-//        leftBar!.physicsBody?.collisionBitMask = footballCategory
+        football!.physicsBody?.categoryBitMask = footballCategory
+        football!.physicsBody?.contactTestBitMask = goalCategory
+        football!.physicsBody?.collisionBitMask = goalCategory
+
+        rightBar!.physicsBody?.categoryBitMask = goalCategory
+        rightBar!.physicsBody?.contactTestBitMask = footballCategory
+        rightBar!.physicsBody?.collisionBitMask = footballCategory
+
+        leftBar!.physicsBody?.categoryBitMask = goalCategory
+        leftBar!.physicsBody?.contactTestBitMask = footballCategory
+        leftBar!.physicsBody?.collisionBitMask = footballCategory
+        
+        touchdown!.physicsBody?.categoryBitMask = touchdownCategory
+        touchdown!.physicsBody?.contactTestBitMask = footballCategory
+        touchdown!.physicsBody?.collisionBitMask = 0
        
 //        let borderBody = SKPhysicsBody(edgeLoopFrom: self.frame)
 //        self.physicsBody = borderBody
@@ -162,7 +178,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(gameCountdownLabel)
         
         func gameCountdown(gameCount: Int) {
-            print("in game countdown....................")
+         //   print("in game countdown....................")
             
             let gameCounterDecrement = SKAction.sequence([SKAction.wait(forDuration: 1.0), SKAction.run(gameCountdownAction)])
             run(SKAction.sequence([SKAction.repeat(gameCounterDecrement, count: 15), SKAction.run(endGame)]))
@@ -193,7 +209,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
                 touchPoint = location
                 touching = true
-                print(touchPoint)
+             //   print(touchPoint)
           //  }
         }
 
@@ -204,7 +220,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let touch = touches.first as UITouch!
         let location = touch!.location(in: self)
         touchPoint = location
-        print(touchPoint, separator: "", terminator: "touchpoint in touches moved")
+      //  print(touchPoint, separator: "", terminator: "touchpoint in touches moved")
         
        
     }
@@ -212,7 +228,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         touching = false
         
-        print(football!, separator: "", terminator: "football in touches ended")
+     //   print(football!, separator: "", terminator: "football in touches ended")
         
         // scale football and fadeout
      
@@ -222,7 +238,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let fade = SKAction.fadeOut(withDuration: 0.8)
         let wait = SKAction.wait(forDuration: 0.1)
         let fadeIn = SKAction.fadeIn(withDuration: 0.1)
-        let resetFootballScale = SKAction.scale(to: 0.9, duration: 0.1)
+        let resetFootballScale = SKAction.scale(to: 0.5, duration: 0.1)
         let resetFootballPosition = SKAction.move(to: CGPoint(x: 0, y: -200), duration: 0.1)
 
         let sequence = SKAction.sequence([scale, fade, wait, resetFootballPosition, resetFootballScale, fadeIn])
@@ -246,7 +262,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if touching {
             //let dt:CGFloat = 1.0/60.0
             let dt: CGFloat = 0.5
-            print(football!, separator: "football in update")
+       //     print(football!, separator: "football in update")
 
             let distance = CGVector(dx: touchPoint.x-football!.position.x, dy: touchPoint.y-football!.position.y)
             let velocity = CGVector(dx: distance.dx/dt, dy: distance.dy/dt)
@@ -259,11 +275,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
-        print("BARRRRRRRRRR")
+     //   print("BARRRRRRRRRR")
+        contactCount = contactCount + 1
+        print(contact.bodyA, separator: "-------------", terminator: "CONTACTaaaaaaaaa")
+          print(contact.bodyB, separator: "-------------", terminator: "CONTACTbbbbbbbbbbbbbbbbb")
+
        
-        if contact.bodyA.categoryBitMask == goalCategory &&  contact.bodyB.categoryBitMask == footballCategory {
+        if contact.bodyA.node?.name == "football" &&  (contact.bodyB.node?.name != "leftBar" || contact.bodyB.node?.name != "rightBar") {
             //let contactPoint = contact.contactPoint
-            print("BAR HIT BAR HIT BAR HIT BAR HIT")
+            
+            if contactCount % 2 == 0 {
+                print("SCCCCCCCCCCCCCCCOOOOOOOOOOOOOOOOORRRRREEEEEEEEEEEEEEEEEEE")
+                score = score + 1
+            }
+       
         }
       
     }
