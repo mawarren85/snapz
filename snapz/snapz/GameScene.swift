@@ -11,6 +11,11 @@ import SpriteKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
+    // declare collision mask categories
+    let footballCategory : UInt32 =  0x1 << 1
+    let goalCategory : UInt32 =  0x1 << 2
+
+
 
     // declare variables
     var football: SKSpriteNode?
@@ -29,13 +34,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // damping slows sprite when touch ends
     //let damping: CGFloat = 0.98
 
-    
+
     
     override func didMove(to view: SKView) {
     
        // self.football = self.childNode(withName: "//football") as? SKSpriteNode
         //football.name = "football"
-        //football.position = CGPoint(x: -140, y: 0)
+        //football.position = CGPoint(x: 0, y: -207)
         //self.addChild(football)
         
         // get football node from scene and store it for use
@@ -55,6 +60,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // set physics world
         physicsWorld.contactDelegate = self
         
+        
+        // MAKE SHIT BOUNCE OFF WALLLLLS
+ 
+        football!.physicsBody?.categoryBitMask = footballCategory
+        football!.physicsBody?.contactTestBitMask = goalCategory
+        football!.physicsBody?.collisionBitMask = goalCategory
+        
+        rightBar!.physicsBody?.categoryBitMask = goalCategory
+        rightBar!.physicsBody?.contactTestBitMask = footballCategory
+        rightBar!.physicsBody?.collisionBitMask = footballCategory
+        
+        leftBar!.physicsBody?.categoryBitMask = goalCategory
+        leftBar!.physicsBody?.contactTestBitMask = footballCategory
+        leftBar!.physicsBody?.collisionBitMask = footballCategory
+       
+        let borderBody = SKPhysicsBody(edgeLoopFrom: self.frame)
+        self.physicsBody = borderBody
+        self.physicsBody?.friction = 0
+        borderBody.contactTestBitMask = goalCategory | footballCategory
+        //borderBody.categoryBitMask
+        borderBody.collisionBitMask = goalCategory | footballCategory
+        
+        football!.physicsBody?.usesPreciseCollisionDetection = true
+        rightBar!.physicsBody?.usesPreciseCollisionDetection = true
+        leftBar!.physicsBody?.usesPreciseCollisionDetection = true
         
         }
     
@@ -86,24 +116,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         print(football!, separator: "", terminator: "football in touches ended")
         
         // scale football and fadeout
+     
+        //let rotationLeft = SKAction.rotate(byAngle: 20.0, duration: 0.2)
+        //let rotationRight = SKAction.rotate(byAngle: -8.0, duration: 0.2)
         let scale = SKAction.scale(to: 0.1, duration: 1.0)
-        let fade = SKAction.fadeOut(withDuration: 1.0)
-        let sequence = SKAction.sequence([scale, fade])
-        football!.run(sequence)
-        
-       // football.removeFromParent()
+        let fade = SKAction.fadeOut(withDuration: 0.8)
+        let wait = SKAction.wait(forDuration: 0.1)
+        let fadeIn = SKAction.fadeIn(withDuration: 0.1)
+        let resetFootballScale = SKAction.scale(to: 0.9, duration: 0.1)
+        let resetFootballPosition = SKAction.move(to: CGPoint(x: 0, y: -200), duration: 0.1)
 
+        let sequence = SKAction.sequence([scale, fade, wait, resetFootballPosition, resetFootballScale, fadeIn])
+        football!.run(sequence)
+       
         
-//         add a new football after one is kicked
-//        football = SKSpriteNode(imageNamed: "football")
-//        football.position = CGPoint(x: 0, y: -122)
-//        addFootball.physicsBody = SKPhysicsBody(rectangleOf: (addFootball.size))
-//
-//        addChild(football!)
-        
-//        if addFootball == addFootball  {
-//            addFootball.run(sequence)
-//        }
         //addFootball.run(sequence)
         // touchpoint = nil?
     }
@@ -129,12 +155,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
 
         }
+       // football?.removeFromParent()
+       // addChild(football!)
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
+        print("BARRRRRRRRRR")
         print(contact.bodyA.node!)
-        if contact.bodyA.node == rightBar || contact.bodyB.node == rightBar || contact.bodyA.node == leftBar || contact.bodyB.node == leftBar {
-              print("BARRRRRRRRRR")
+        if contact.bodyA.categoryBitMask == goalCategory &&  contact.bodyB.categoryBitMask == footballCategory {
+            //let contactPoint = contact.contactPoint
+            print("BAR HIT BAR HIT BAR HIT BAR HIT")
         }
       
     }
