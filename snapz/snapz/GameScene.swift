@@ -27,14 +27,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var touching: Bool = false
     var contactCount : Int = 0
     var count: Int = 5
-    var countdownLabel = SKLabelNode(fontNamed: "ArialMT")
-    var gameCountdownLabel =  SKLabelNode(fontNamed: "ArialMT")
+    var countdownLabel = SKLabelNode(fontNamed: "Helvetica Neue Ultra Light")
+    var gameCountdownLabel =  SKLabelNode(fontNamed: "Helvetica Neue Ultra Light")
     var gameCount: Int = 15 {
         didSet {
             gameCountdownLabel.text = "\(gameCount)"
         }
     }
-    var scoreLabel = SKLabelNode(fontNamed: "ArialMT")
+    var scoreLabel = SKLabelNode(fontNamed: "Helvetica Neue Ultra Light")
     var score: Int = 0 {
         didSet {
             scoreLabel.text = "Score: \(score)"
@@ -312,7 +312,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
       
     }
-        
+    
+    
+ 
     
     
 //    func touchDown(atPoint pos : CGPoint) {
