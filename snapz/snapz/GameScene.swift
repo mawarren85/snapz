@@ -11,11 +11,12 @@ import SpriteKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
+    
     // declare collision mask categories
     let footballCategory : UInt32 =  1 << 0
     let goalCategory : UInt32 =  1 << 1
-    let touchdownCategory : UInt32 =  1 << 2
-
+    let touchdownCategory : UInt32 =  1 << 3
+    
 
     // declare variables
     var football: SKSpriteNode?
@@ -55,6 +56,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func didMove(to view: SKView) {
         
+
+        
         // define game score label properties
         scoreLabel.fontColor = SKColor.white
         scoreLabel.fontSize = 25
@@ -93,9 +96,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
        
         
         // set physics world
-        physicsWorld.contactDelegate = self
-        
-        
+
         // MAKE SHIT BOUNCE OFF WALLLLLS
  
         football!.physicsBody?.categoryBitMask = footballCategory
@@ -114,6 +115,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         touchdown!.physicsBody?.contactTestBitMask = footballCategory
         touchdown!.physicsBody?.collisionBitMask = 0
        
+        
+        self.physicsWorld.contactDelegate = self
+        
 //        let borderBody = SKPhysicsBody(edgeLoopFrom: self.frame)
 //        self.physicsBody = borderBody
 //        self.physicsBody?.friction = 0
@@ -175,6 +179,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         gameCountdownLabel.fontSize = 50
         gameCountdownLabel.position = CGPoint(x: 115, y: 225)
         gameCountdownLabel.text = "\(gameCount)"
+        gameCountdownLabel.zPosition = 100
         addChild(gameCountdownLabel)
         
         func gameCountdown(gameCount: Int) {
@@ -197,9 +202,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
  
+        // light!
+        // light!
         
+//        let light = SKLightNode()
+//        light.name = "light"
+//        light.zPosition = 1
+//        light.position = CGPoint(x: 150, y: 0)
+//        light.categoryBitMask = 4
+//        light.falloff = 0.25
+//        light.ambientColor = UIColor.darkGray
+//        light.lightColor = UIColor.white
+//        light.shadowColor = UIColor.black
+//        self.addChild(light)
         
-        
+//        football?.lightingBitMask = 4
+//        rightBar?.lightingBitMask = 4
+//        leftBar?.lightingBitMask = 4
         }
     
     
@@ -235,7 +254,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //let rotationLeft = SKAction.rotate(byAngle: 20.0, duration: 0.2)
         //let rotationRight = SKAction.rotate(byAngle: -8.0, duration: 0.2)
         let scale = SKAction.scale(to: 0.1, duration: 1.0)
-        let fade = SKAction.fadeOut(withDuration: 0.8)
+        let fade = SKAction.fadeOut(withDuration: 0.5)
         let wait = SKAction.wait(forDuration: 0.1)
         let fadeIn = SKAction.fadeIn(withDuration: 0.1)
         let resetFootballScale = SKAction.scale(to: 0.5, duration: 0.1)
@@ -261,7 +280,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if touching {
             //let dt:CGFloat = 1.0/60.0
-            let dt: CGFloat = 0.5
+            let dt: CGFloat = 0.4
        //     print(football!, separator: "football in update")
 
             let distance = CGVector(dx: touchPoint.x-football!.position.x, dy: touchPoint.y-football!.position.y)
@@ -275,20 +294,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
-     //   print("BARRRRRRRRRR")
-        contactCount = contactCount + 1
+        print("BARRRRRRRRRR")
+       
         print(contact.bodyA, separator: "-------------", terminator: "CONTACTaaaaaaaaa")
           print(contact.bodyB, separator: "-------------", terminator: "CONTACTbbbbbbbbbbbbbbbbb")
 
        
-        if contact.bodyA.node?.name == "football" &&  (contact.bodyB.node?.name != "leftBar" || contact.bodyB.node?.name != "rightBar") {
+        if contact.bodyA.node?.name == "touchdown" || contact.bodyB.node?.name == "touchdown" {
             //let contactPoint = contact.contactPoint
             
+             contactCount = contactCount + 1
             if contactCount % 2 == 0 {
                 print("SCCCCCCCCCCCCCCCOOOOOOOOOOOOOOOOORRRRREEEEEEEEEEEEEEEEEEE")
                 score = score + 1
             }
-       
+            
         }
       
     }
