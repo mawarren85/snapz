@@ -108,6 +108,10 @@ class LoginViewController: UIViewController {
                              "password": self.passwordTextField.text]
         Alamofire.request(urlString,method: .post, parameters: requestParams, encoding: JSONEncoding.default, headers: [:])
             .responseJSON {response in print(response)}
+        
+        // load sign in scene
+        performSegue(withIdentifier: "LoginPageFromCreateAccount", sender: self)
+
     }
     
     

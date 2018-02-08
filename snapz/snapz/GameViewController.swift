@@ -10,7 +10,7 @@ import UIKit
 import SpriteKit
 import GameplayKit
 
-class GameViewController: UIViewController {
+class GameViewController: UIViewController, UIVIewControllerTransitionDelegate {
     
    
     
@@ -25,6 +25,9 @@ class GameViewController: UIViewController {
             if let scene = SKScene(fileNamed: "LevelsScene") {
                 // Set the scale mode to scale to fit the window
                 scene.scaleMode = .aspectFill
+                
+                // scene delegate
+                scene.delegate = self as UIViewControllerTransitioningDelegate
                 
                 // Present the scene
                 view.presentScene(scene)
