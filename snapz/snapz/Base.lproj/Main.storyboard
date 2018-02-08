@@ -128,6 +128,9 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f9V-aA-5kF">
                                         <rect key="frame" x="0.0" y="304.5" width="335" height="30"/>
                                         <state key="normal" title="Save"/>
+                                        <connections>
+                                            <action selector="saveButton:" destination="0HB-a1-TXG" eventType="touchUpInside" id="61b-Yh-lrK"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                             </stackView>

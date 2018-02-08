@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class LoginViewController: UIViewController {
     
@@ -24,6 +25,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var emailValidationLabel: UILabel!
     @IBOutlet weak var nameValidationLabel: UILabel!
     
+
     
     
     override func viewDidLoad() {
@@ -92,6 +94,25 @@ class LoginViewController: UIViewController {
         // update save button
         saveButton.isEnabled = formIsValid
     }
+    
+    
+    
+    
+    // MARK: - Actions
+    
+    @IBAction func saveButton(_ sender: UIButton) {
+
+        let urlString = "http://localhost:8000/users/signup/"
+        let requestParams = ["name": self.nameTextField.text,
+                             "email": self.emailTextField.text,
+                             "password": self.passwordTextField.text]
+        Alamofire.request(urlString,method: .post, parameters: requestParams, encoding: JSONEncoding.default, headers: [:])
+            .responseJSON {response in print(response)}
+    }
+    
+    
+    
+    
     
     /*
     // MARK: - Navigation
