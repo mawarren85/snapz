@@ -7,6 +7,7 @@
 //
 
 import SpriteKit
+import Alamofire
 
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
@@ -27,21 +28,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var touching: Bool = false
     var contactCount : Int = 0
     var count: Int = 5
-    var countdownLabel = SKLabelNode(fontNamed: "Helvetica Neue Ultra Light")
-    var gameCountdownLabel =  SKLabelNode(fontNamed: "Helvetica Neue Ultra Light")
+    var countdownLabel = SKLabelNode(fontNamed: "HelveticaNeue-Bold ")
+    var gameCountdownLabel =  SKLabelNode(fontNamed: "HelveticaNeue-Bold ")
     var gameCount: Int = 15 {
         didSet {
             gameCountdownLabel.text = "\(gameCount)"
         }
     }
-    var scoreLabel = SKLabelNode(fontNamed: "Helvetica Neue Ultra Light")
+    var scoreLabel = SKLabelNode(fontNamed: "HelveticaNeue-Bold ")
     var score: Int = 0 {
         didSet {
             scoreLabel.text = "Score: \(score)"
         }
     }
-    
-    
+    var gameOverLabel = SKLabelNode(fontNamed: "HelveticaNeue-Bold ")
+    var endCount: Int = 5
+    var youWinLabel = SKLabelNode(fontNamed: "HelveticaNeue-Bold ")
+  
 
    // var football: SKSpriteNode!
 
@@ -84,12 +87,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
        // self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
         football!.physicsBody = SKPhysicsBody(rectangleOf: (football!.size))
-       // football!.physicsBody?.contactTestBitMask = touchdownCategory
-        //football!.physicsBody?.collisionBitMask = 0
         touchdown!.physicsBody = SKPhysicsBody(rectangleOf: (touchdown!.size))
-       // touchdown!.physicsBody?.contactTestBitMask = footballCategory
         touchdown!.physicsBody?.affectedByGravity = false
-      //  touchdown!.physicsBody?.collisionBitMask = 0
+
         
 //        rightBar!.physicsBody = SKPhysicsBody(rectangleOf: (rightBar!.size))
 //        leftBar!.physicsBody = SKPhysicsBody(rectangleOf: (leftBar!.size))
@@ -198,28 +198,44 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         
         func endGame () {
+            if score < 3 {
             print("game over")
+            gameOverLabel.horizontalAlignmentMode = .center
+            gameOverLabel.verticalAlignmentMode = .baseline
+            gameOverLabel.position = CGPoint(x: 0, y: -600)
+            gameOverLabel.fontColor = SKColor.white
+            gameOverLabel.fontSize = 80
+            gameOverLabel.zPosition = 100
+            gameOverLabel.numberOfLines = 0
+            gameOverLabel.text = "Game\nOver"
+            addChild(gameOverLabel)
+            
+            let fadeText = SKAction.fadeIn(withDuration: 0.9)
+            let moveGameOverLabel = SKAction.move(to: CGPoint(x: 0, y: -50), duration: 0.1)
+            
+            let sequence = SKAction.sequence([moveGameOverLabel, fadeText])
+            gameOverLabel.run(sequence)
+            
+            let timeBeforeLevelPage = SKAction.sequence([SKAction.wait(forDuration: 1.0), SKAction.run(countdownTime)])
+            run(SKAction.sequence([SKAction.repeat(timeBeforeLevelPage, count: 5), SKAction.run(backToLevels)]))
+            }
         }
         
- 
-        // light!
-        // light!
-        
-//        let light = SKLightNode()
-//        light.name = "light"
-//        light.zPosition = 1
-//        light.position = CGPoint(x: 150, y: 0)
-//        light.categoryBitMask = 4
-//        light.falloff = 0.25
-//        light.ambientColor = UIColor.darkGray
-//        light.lightColor = UIColor.white
-//        light.shadowColor = UIColor.black
-//        self.addChild(light)
-        
-//        football?.lightingBitMask = 4
-//        rightBar?.lightingBitMask = 4
-//        leftBar?.lightingBitMask = 4
+    
+        func countdownTime () {
+            endCount = endCount - 1
         }
+        
+        func backToLevels() {
+            let scene = SKScene(fileNamed: "LevelsScene")
+            scene!.scaleMode = .aspectFill
+            view.presentScene(scene)
+        }
+        
+
+        }
+    
+    
     
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -231,9 +247,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
              //   print(touchPoint)
           //  }
         }
-
-
     }
+    
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first as UITouch!
@@ -279,25 +294,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
        // print(football!, separator: "", terminator: "football in update function")
         
         if touching {
-            //let dt:CGFloat = 1.0/60.0
             let dt: CGFloat = 0.4
-       //     print(football!, separator: "football in update")
 
             let distance = CGVector(dx: touchPoint.x-football!.position.x, dy: touchPoint.y-football!.position.y)
             let velocity = CGVector(dx: distance.dx/dt, dy: distance.dy/dt)
             football!.physicsBody!.velocity=velocity
-            
-
         }
-       // football?.removeFromParent()
-       // addChild(football!)
     }
     
+    
+    
     func didBegin(_ contact: SKPhysicsContact) {
-        print("BARRRRRRRRRR")
-       
-        print(contact.bodyA, separator: "-------------", terminator: "CONTACTaaaaaaaaa")
-          print(contact.bodyB, separator: "-------------", terminator: "CONTACTbbbbbbbbbbbbbbbbb")
+      //  print("BARRRRRRRRRR")
+      // print(contact.bodyA, separator: "-------------", terminator: "CONTACTaaaaaaaaa")
+      // print(contact.bodyB, separator: "-------------", terminator: "CONTACTbbbbbbbbbbbbbbbbb")
 
        
         if contact.bodyA.node?.name == "touchdown" || contact.bodyB.node?.name == "touchdown" {
@@ -307,62 +317,88 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if contactCount % 2 == 0 {
                 print("SCCCCCCCCCCCCCCCOOOOOOOOOOOOOOOOORRRRREEEEEEEEEEEEEEEEEEE")
                 score = score + 1
+                if score == 3 {
+                    youWin ()
+                }
             }
             
         }
       
     }
     
-    
- 
-    
-    
-//    func touchDown(atPoint pos : CGPoint) {
-//        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-//            n.position = pos
-//            n.strokeColor = SKColor.green
-//            self.addChild(n)
-//        }
-//    }
-
-//    func touchMoved(toPoint pos : CGPoint) {
-//        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-//            n.position = pos
-//            n.strokeColor = SKColor.blue
-//            self.addChild(n)
-//        }
-//    }
-//
-//    func touchUp(atPoint pos : CGPoint) {
-//        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-//            n.position = pos
-//            n.strokeColor = SKColor.red
-//            self.addChild(n)
-//        }
-//    }
-
- //   override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        if let label = self.label {
-//            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-//        }
+    func youWin () {
+        print("you win")
+        youWinLabel.verticalAlignmentMode = .baseline
+        youWinLabel.position = CGPoint(x: 0, y: -600)
+        youWinLabel.fontColor = SKColor.white
+        youWinLabel.fontSize = 65
+        youWinLabel.zPosition = 100
+        youWinLabel.numberOfLines = 0
+        youWinLabel.text = "Level\nComplete"
+        addChild(youWinLabel)
         
-//        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
-//    }
+        let fadeText = SKAction.fadeIn(withDuration: 0.9)
+        let moveGameOverLabel = SKAction.move(to: CGPoint(x: 0, y: -50), duration: 0.1)
+        
+        let sequence = SKAction.sequence([moveGameOverLabel, fadeText])
+        youWinLabel.run(sequence)
+        
+        let timeBeforeLevelPage = SKAction.sequence([SKAction.wait(forDuration: 1.0), SKAction.run(countdownTime)])
+        run(SKAction.sequence([SKAction.repeat(timeBeforeLevelPage, count: 5), SKAction.run(backToLevels)]))
+    }
     
-//    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
-//    }
+    
+    // repeat functions!! find out why these aren't in scope when called from dig begin contact
+    func countdownTime () {
+        endCount = endCount - 1
+    }
+    
+    
+    func backToLevels() {
+        
+        // get access to gameviewcontroller...get user information passed from login
+        var currentViewController: GameViewController?
+        var upstreamResponder: UIResponder? = self.view
+        var found = false
+        
+        while (found != true){
+            upstreamResponder = upstreamResponder!.next
+            if let viewController = upstreamResponder as? GameViewController {
+                currentViewController = viewController
+                found = true
+            }
+            if upstreamResponder == nil {
+                //could not find VC, PANIC!
+                break
+            }
+        }
+        // get current user logged in from gameviewcontroller
+         let userNamePassed = currentViewController?.userDataPassed! as? [[String : AnyObject]]
+        let userId = userNamePassed![0]["id"] as! Int?
+        // add points to user
+        
+        let urlString = "http://localhost:8000/users/user/:id/"
+        let requestParams = ["points": 100, "id": userId]
+        
+        Alamofire.request(urlString,method: .post, parameters: requestParams, encoding: JSONEncoding.default, headers: [:])
+            .responseJSON {response in print(response)
+                
+          
+        // go back to levels scene
+        changeScene ()
+  
+ 
+    }
+    
+    func changeScene() {
+        
+        let scene = SKScene(fileNamed: "LevelsScene")
+        //pass user points
+        LevelsScene.userPointsWon = 100
+        scene!.scaleMode = .aspectFill
+        self.view?.presentScene(scene)
+        }
+    }
 
-//    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-//    }
-
-//    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-//    }
-//
-
-//    override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
-//    }
 }
+

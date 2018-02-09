@@ -14,6 +14,11 @@ class LevelsScene: SKScene {
     var level1: SKSpriteNode?
     var userName: SKLabelNode?
     var userPoints: SKLabelNode?
+    var userPointCount: Int?
+    static var userPointsWon = 0
+    
+   
+
 
     
     override func didMove(to view: SKView) {
@@ -35,43 +40,41 @@ class LevelsScene: SKScene {
             }
         }
         
+        // being all kinds of difficult getting data from the user object
         let userNamePassed = currentViewController?.userDataPassed! as? [[String : AnyObject]]
-        print(userNamePassed![0]["name"] as? String)
-        
-      
-       // let ugh = dictionary!["name"] as? Double
-                // access individual value in dictionary
-               // print(ugh, separator: "", terminator: "this is ugh in the dictionary")
-                userName?.text = userNamePassed![0]["name"] as? String
-                addChild(userName!)
-            
-        
+        let playerName = userNamePassed![0]["name"] as? String
+        let playerPointsPassed = userNamePassed![0]["points"] as? Int
        
-
         
-        print(userNamePassed, separator: "", terminator: "ISTHISWORKIGN?????")
-        
-        // get level 1
-        self.level1 = self.childNode(withName: "//level1") as? SKSpriteNode
-        print("Hello")
+        print(userNamePassed![0]["name"] as? String)
         
         // get user labels
         self.userName = self.childNode(withName: "//userName") as? SKLabelNode
         self.userPoints = self.childNode(withName: "//userPoints") as? SKLabelNode
         
         
+        // set label text
+
+        userName?.text = "Player: \(playerName!)"
         
-//        // get user info from gameviewcontroller
-//        if let userDataPassed = self.userData?.value(forKey: "userDataPassed") {
-//            print("gameInfo is :\(userDataPassed)")
-//            print(type(of: userDataPassed))
-        
-//
-//        }
-     
+        if playerPointsPassed == nil {
+            userPoints?.text = "Points: 0"
+        } else {
+            let totalUserPoints = playerPointsPassed! + LevelsScene.userPointsWon
+            userPoints?.text = "Points: \(totalUserPoints)"
        
+        }
         
+        
+        
+        
+       
+        // get level 1 image node
+        self.level1 = self.childNode(withName: "//level1") as? SKSpriteNode
+        print("Hello")
     }
+    
+    
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         print("you touched")
@@ -82,6 +85,7 @@ class LevelsScene: SKScene {
         let touchLocation = touch.location(in: self)
         let touchedNode = self.atPoint(touchLocation)
         
+        // get level one game scene
         if (touchedNode.name == "level1") {
             let scene = SKScene(fileNamed: "GameScene")
             scene!.scaleMode = .aspectFill

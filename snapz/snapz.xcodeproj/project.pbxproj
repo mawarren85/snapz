@@ -14,6 +14,9 @@
 		A5377134202ABA940051A833 /* LevelsScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5377133202ABA940051A833 /* LevelsScene.swift */; };
 		A5377138202AC4A80051A833 /* LevelsScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = A5377137202AC4A80051A833 /* LevelsScene.sks */; };
 		A5377140202B5F660051A833 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A537713F202B5F660051A833 /* LoginViewController.swift */; };
+		A539E179202D505800B415C6 /* LandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A539E178202D505800B415C6 /* LandingViewController.swift */; };
+		A539E17B202D6A7600B415C6 /* gameEndedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A539E17A202D6A7600B415C6 /* gameEndedViewController.swift */; };
+		A539E17D202D6D6600B415C6 /* GameOver.sks in Resources */ = {isa = PBXBuildFile; fileRef = A539E17C202D6D6600B415C6 /* GameOver.sks */; };
 		A5D38BB02028313A00002937 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = A5D38BAF2028313A00002937 /* GameScene.sks */; };
 		A5E8DD792027B6C9001E9A23 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E8DD782027B6C9001E9A23 /* AppDelegate.swift */; };
 		A5E8DD7D2027B6C9001E9A23 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = A5E8DD7C2027B6C9001E9A23 /* Actions.sks */; };
@@ -34,6 +37,9 @@
 		A5377133202ABA940051A833 /* LevelsScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelsScene.swift; sourceTree = "<group>"; };
 		A5377137202AC4A80051A833 /* LevelsScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = LevelsScene.sks; sourceTree = "<group>"; };
 		A537713F202B5F660051A833 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		A539E178202D505800B415C6 /* LandingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingViewController.swift; sourceTree = "<group>"; };
+		A539E17A202D6A7600B415C6 /* gameEndedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gameEndedViewController.swift; sourceTree = "<group>"; };
+		A539E17C202D6D6600B415C6 /* GameOver.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameOver.sks; sourceTree = "<group>"; };
 		A5D38BAF2028313A00002937 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 		A5E8DD752027B6C9001E9A23 /* snapz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = snapz.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5E8DD782027B6C9001E9A23 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -89,8 +95,10 @@
 				A5018F0F202C2C750046397B /* SignInViewController.swift */,
 				A5E8DD782027B6C9001E9A23 /* AppDelegate.swift */,
 				A5E8DDBA2027F50B001E9A23 /* MSReferenceNode.swift */,
+				A539E178202D505800B415C6 /* LandingViewController.swift */,
 				A5E8DD802027B6C9001E9A23 /* GameViewController.swift */,
 				A5E8DD7E2027B6C9001E9A23 /* GameScene.swift */,
+				A539E17C202D6D6600B415C6 /* GameOver.sks */,
 				A5377133202ABA940051A833 /* LevelsScene.swift */,
 				A5377137202AC4A80051A833 /* LevelsScene.sks */,
 				A5D38BAF2028313A00002937 /* GameScene.sks */,
@@ -99,6 +107,7 @@
 				A5018F0B202BFE540046397B /* Pods */,
 				A5E8DDB62027EE6B001E9A23 /* assets.atlas */,
 				A5E8DD822027B6C9001E9A23 /* Main.storyboard */,
+				A539E17A202D6A7600B415C6 /* gameEndedViewController.swift */,
 				A5E8DD852027B6C9001E9A23 /* Assets.xcassets */,
 				A5E8DD872027B6C9001E9A23 /* LaunchScreen.storyboard */,
 				A5E8DD8A2027B6C9001E9A23 /* Info.plist */,
@@ -195,6 +204,7 @@
 				A5E8DD892027B6C9001E9A23 /* LaunchScreen.storyboard in Resources */,
 				A5E8DD7D2027B6C9001E9A23 /* Actions.sks in Resources */,
 				A5018F0C202BFE540046397B /* Pods in Resources */,
+				A539E17D202D6D6600B415C6 /* GameOver.sks in Resources */,
 				A5377138202AC4A80051A833 /* LevelsScene.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -262,6 +272,8 @@
 			files = (
 				A5018F10202C2C750046397B /* SignInViewController.swift in Sources */,
 				A5377140202B5F660051A833 /* LoginViewController.swift in Sources */,
+				A539E17B202D6A7600B415C6 /* gameEndedViewController.swift in Sources */,
+				A539E179202D505800B415C6 /* LandingViewController.swift in Sources */,
 				A5E8DD7F2027B6C9001E9A23 /* GameScene.swift in Sources */,
 				A5E8DDBB2027F50B001E9A23 /* MSReferenceNode.swift in Sources */,
 				A5E8DD812027B6C9001E9A23 /* GameViewController.swift in Sources */,

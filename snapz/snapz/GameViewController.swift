@@ -13,7 +13,7 @@ import GameplayKit
 var userDataPassed: AnyObject!
 
 class GameViewController: UIViewController {
-    //get user info that logged in
+    // variable for user object that is passed from view controller
     var userDataPassed: AnyObject?
     
     var currentGame: GameScene!
@@ -22,8 +22,6 @@ class GameViewController: UIViewController {
         super.viewDidLoad()
         
        
-   
-        
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
             if let scene = SKScene(fileNamed: "LevelsScene") {
@@ -35,10 +33,7 @@ class GameViewController: UIViewController {
                 // allow user info to be passed to scene view
                 print(userDataPassed!, separator: "", terminator: "USER DATA PASSED!!!!!!!!")
                 print(type(of: userDataPassed))
-//
-//                scene.userData = NSMutableDictionary()
-//                scene.userData?.setObject(userDataPassed ?? "", forKey: "userDataPassed" as NSCopying)
-//
+
                 // Present the scene
                 view.presentScene(scene)
                 
