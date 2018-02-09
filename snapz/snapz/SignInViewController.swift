@@ -11,8 +11,16 @@ import Alamofire
 
 
 
-
 class SignInViewController: UIViewController {
+    var userData: AnyObject?
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "LoginToLevelPage" {
+            if let destinationViewController = segue.destination as? GameViewController {
+            destinationViewController.userDataPassed = userData
+            }
+        }
+    }
     
       // MARK: - Properties
     
@@ -24,10 +32,7 @@ class SignInViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-
-        // Do any additional setup after loading the view.
-    }
+}
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -37,28 +42,33 @@ class SignInViewController: UIViewController {
      // MARK: - Actions
     
     @IBAction func logInButton(_ sender: UIButton) {
+       
+
+        
         let urlString = "http://localhost:8000/users/login/"
         let requestParams = ["email": self.signInEmailLabel.text,
                              "password": self.signInPasswordLabel.text]
+        
         Alamofire.request(urlString,method: .post, parameters: requestParams, encoding: JSONEncoding.default, headers: [:])
-            .responseJSON {response in print(response)}
+            .responseJSON {response in switch response.result {
+                
+            case .success(let data):
+                self.userData = data as AnyObject
+                print(type(of: self.userData), separator: "", terminator: "TYPE of USER DATA" )
+                
+                self.performSegue(withIdentifier: "LoginToLevelPage", sender: self.logInButton)
+                print(data, separator: "", terminator: "RESPONSEEEEEEEEEEEEE!!!!!!!!")
+            case .failure(let error):
+                print("Request failed with error: \(error)")
+                }
+               
+                
+        }
         
-        // load sign in scene
-//        performSegue(withIdentifier: "LoginPageFromCreateAccount", sender: self)
         
-//        if let scene = SKScene(fileNamed: "LevelsScene") {
-//            // Set the scale mode to scale to fit the window
-//            scene.scaleMode = .aspectFill
-//
-//            // Present the scene
-//            view.presentScene(scene)
-//        func didMoveToView(view: SKScene) {
-//            let viewController = self.view?.window?.rootViewController
-//            let scene = SKScene(fileNamed: "LevelsScene")
-//            scene?.scaleMode = .aspectFill
-//            view.presentScene(scene)
-//        }
     }
+    
+  
     
 
     /*

@@ -231,11 +231,12 @@
                         <outlet property="logInButton" destination="4EB-kR-yaR" id="kmm-lD-sV3"/>
                         <outlet property="signInEmailLabel" destination="XNv-yd-TGg" id="qWN-1u-38s"/>
                         <outlet property="signInPasswordLabel" destination="vSH-9O-bZ1" id="det-fZ-3Tx"/>
+                        <segue destination="BV1-FR-VrT" kind="presentation" identifier="LoginToLevelPage" id="q5D-85-DEO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Adf-Ef-fsv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2225" y="69"/>
+            <point key="canvasLocation" x="2268" y="69"/>
         </scene>
     </scenes>
 </document>
