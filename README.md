@@ -26,6 +26,13 @@ In 15 seconds, see if you can flick three footballs into the moving hands at the
 - Add auth so users can log in and store level completion data
 - Have a scoreboard so users can see how they compare to others that have completed the game
 
+# App images:
+
+![alt tag](images/home.png)
+![alt tag](images/create-account.png)
+![alt tag](images/login.png)
+![alt tag](images/game-levels.png)
+![alt tag](images/score.png)
 
 # Wireframes:
 
